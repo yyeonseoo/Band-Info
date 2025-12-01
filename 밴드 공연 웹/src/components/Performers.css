@@ -1,0 +1,75 @@
+.performers {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.performers-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 1.5rem;
+}
+
+.performers-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.performers-content {
+  padding: 2rem;
+}
+
+.performers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1.5rem;
+}
+
+.performer-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  border-radius: 12px;
+  transition: transform 0.3s, box-shadow 0.3s;
+  text-align: center;
+}
+
+.performer-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+}
+
+.performer-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.performer-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  word-break: keep-all;
+}
+
+@media (max-width: 768px) {
+  .performers-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 1rem;
+  }
+
+  .performer-card {
+    padding: 1.25rem;
+  }
+
+  .performer-icon {
+    font-size: 2rem;
+  }
+
+  .performer-name {
+    font-size: 0.9rem;
+  }
+}
+

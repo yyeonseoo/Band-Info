@@ -1,0 +1,59 @@
+.performances-page {
+  animation: fadeIn 0.5s ease-in;
+}
+
+.performances-page h1 {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  color: #333;
+}
+
+.performances-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.performances-section {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.empty-state {
+  background: white;
+  padding: 3rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  color: #999;
+}
+
+.empty-state p {
+  margin-bottom: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .performances-page h1 {
+    font-size: 2rem;
+  }
+}
+
