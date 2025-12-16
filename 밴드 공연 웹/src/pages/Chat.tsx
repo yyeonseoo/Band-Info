@@ -15,7 +15,7 @@ const Chat = () => {
   const [socket, setSocket] = useState<Socket | null>(null)
   const [messages, setMessages] = useState<Message[]>([])
   const [inputMessage, setInputMessage] = useState('')
-  const [onlineUsers, setOnlineUsers] = useState(0)
+  const [onlineUsers] = useState(0)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -58,9 +58,9 @@ const Chat = () => {
 
   const formatTime = (timestamp: string) => {
     const date = new Date(timestamp)
-    return date.toLocaleTimeString('ko-KR', { 
-      hour: '2-digit', 
-      minute: '2-digit' 
+    return date.toLocaleTimeString('ko-KR', {
+      hour: '2-digit',
+      minute: '2-digit'
     })
   }
 
@@ -105,8 +105,8 @@ const Chat = () => {
             className="chat-input"
             disabled={!socket || !user}
           />
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             className="send-button"
             disabled={!inputMessage.trim() || !socket || !user}
           >
