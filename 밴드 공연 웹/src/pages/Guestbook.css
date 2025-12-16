@@ -1,99 +1,45 @@
+/* =====================
+   페이지 배경 (트리 PNG)
+   ===================== */
 .guestbook-page {
-  animation: fadeIn 0.5s ease-in;
   min-height: 100vh;
-  background-image: url('../assets/배경/light_forest.png');
-  background-size: contain;
-  background-position: center;
+  background-image: url('../assets/배경/tree.png');
+  background-size: auto 100%;
+  background-position: center top;
   background-repeat: no-repeat;
-  background-attachment: fixed;
+  background-color: #000;
   position: relative;
-  padding: 1rem 0;
 }
 
-.guestbook-page::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(2px);
-  z-index: 0;
-}
-
-.guestbook-page h1 {
-  font-size: 1.75rem;
-  margin-bottom: 1.5rem;
-  color: #333;
-  position: relative;
-  z-index: 1;
-  text-align: center;
-}
-
-.guestbook-container {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  align-items: center;
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 0 1rem;
-}
-
+/* =====================
+   중앙 캔버스 (좌표 기준)
+   ===================== */
 .tree-container {
   position: relative;
-  width: 100%;
-  max-width: 400px;
-  aspect-ratio: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 360px;
+  height: 640px;
   margin: 0 auto;
 }
 
-.tree {
-  position: relative;
-  width: 200px;
-  height: 300px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
+@media (min-width: 768px) {
+  .tree-container {
+    width: 420px;
+    height: 760px;
+  }
 }
 
-.tree-top {
-  font-size: 3rem;
-  line-height: 1;
-  margin-bottom: -0.5rem;
-}
-
-.tree-middle {
-  font-size: 4rem;
-  line-height: 1;
-  margin-bottom: -0.5rem;
-}
-
-.tree-bottom {
-  font-size: 5rem;
-  line-height: 1;
-  margin-bottom: 0.5rem;
-}
-
-.tree-trunk {
-  width: 30px;
-  height: 40px;
-  background: #8B4513;
-  border-radius: 4px;
-}
-
+/* =====================
+   오너먼트
+   ===================== */
 .ornament {
   position: absolute;
+  width: 36px;
+  height: 36px;
+  background-size: contain;
+  background-repeat: no-repeat;
   cursor: pointer;
-  transition: transform 0.2s ease;
   z-index: 10;
+  transition: transform 0.2s ease;
 }
 
 .ornament:hover {
@@ -101,133 +47,124 @@
   z-index: 20;
 }
 
-.ornament-icon {
-  font-size: 2rem;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
-  animation: float 3s ease-in-out infinite;
-}
-
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
+@media (min-width: 768px) {
+  .ornament {
+    width: 44px;
+    height: 44px;
   }
 }
 
-.ornament-tooltip {
+/* 오너먼트 이미지 */
+.ornament.guitar { background-image: url('../assets/ornaments/guitar.png'); }
+.ornament.bass { background-image: url('../assets/ornaments/bass.png'); }
+.ornament.mic { background-image: url('../assets/ornaments/mic.png'); }
+.ornament.drum { background-image: url('../assets/ornaments/drum.png'); }
+.ornament.keyboard { background-image: url('../assets/ornaments/keyboard.png'); }
+
+/* =====================
+   방명록 버튼
+   ===================== */
+.add-message-button {
   position: absolute;
-  bottom: 100%;
+  bottom: 24px;
   left: 50%;
   transform: translateX(-50%);
-  margin-bottom: 0.5rem;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  padding: 0.75rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  min-width: 150px;
-  max-width: 200px;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s ease;
-}
-
-.ornament:hover .ornament-tooltip {
-  opacity: 1;
-}
-
-.tooltip-name {
-  font-weight: 600;
-  color: #333;
-  font-size: 0.875rem;
-  margin-bottom: 0.25rem;
-}
-
-.tooltip-message {
-  color: #666;
-  font-size: 0.8125rem;
-  word-break: break-word;
-}
-
-.guestbook-form-container {
-  width: 100%;
-  max-width: 400px;
-}
-
-.add-message-button {
-  width: 100%;
-  padding: 1.125rem;
+  width: 90%;
+  max-width: 320px;
+  padding: 1rem;
   background: #FFF0B8;
-  color: #333;
   border: none;
-  border-radius: 15px;
+  border-radius: 16px;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
-  min-height: 48px;
-  touch-action: manipulation;
+  z-index: 20;
 }
 
-.add-message-button:hover {
-  background: #fff38b;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
+/* =====================
+   모달 공통
+   ===================== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
 }
 
-.guestbook-form {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  padding: 1.5rem;
-  border-radius: 15px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+.modal {
+  width: 92%;
+  max-width: 420px;
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 1.75rem 1.5rem 1.5rem;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.35);
 }
-
-.guestbook-form h3 {
-  margin: 0 0 1.25rem 0;
+.modal-title {
   font-size: 1.25rem;
-  color: #333;
+  font-weight: 700;
+  margin-bottom: 1.25rem;
   text-align: center;
 }
 
-.guestbook-form .form-group {
-  margin-bottom: 1rem;
+/* =====================
+   작성 모달 전용
+   ===================== */
+.ornament-select {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  margin-bottom: 1.5rem;
 }
 
-.guestbook-form label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 600;
-  color: #333;
-  font-size: 0.9rem;
+
+.select-box {
+  aspect-ratio: 1;
+  border-radius: 14px;
+  border: 2px solid #eee;
+  background-size: 60%;
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.guestbook-form input,
-.guestbook-form textarea {
+.select-box:hover {
+  transform: translateY(-2px);
+}
+
+.select-box.selected {
+  border-color: #ffcc00;
+  background-color: #fff8d6;
+  box-shadow: 0 4px 10px rgba(255, 204, 0, 0.5);
+}
+
+.select-box.guitar { background-image: url('../assets/ornaments/guitar.png'); }
+.select-box.bass { background-image: url('../assets/ornaments/bass.png'); }
+.select-box.mic { background-image: url('../assets/ornaments/mic.png'); }
+.select-box.drum { background-image: url('../assets/ornaments/drum.png'); }
+.select-box.keyboard { background-image: url('../assets/ornaments/keyboard.png'); }
+
+.modal input,
+.modal textarea {
   width: 100%;
-  padding: 1rem;
-  border: 2px solid #e0e0e0;
-  border-radius: 10px;
-  font-size: 16px;
-  font-family: inherit;
-  transition: border-color 0.3s;
-  -webkit-appearance: none;
-  appearance: none;
-  box-sizing: border-box;
+  padding: 0.9rem 1rem;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  font-size: 0.95rem;
+  margin-bottom: 0.75rem;
+  background: #fafafa;
 }
 
-.guestbook-form input:focus,
-.guestbook-form textarea:focus {
-  border-color: #667eea;
+.modal input:focus,
+.modal textarea:focus {
   outline: none;
+  border-color: #ffcc00;
+  background: #fff;
 }
 
-.guestbook-form textarea {
-  resize: vertical;
-  min-height: 100px;
-}
 
 .form-buttons {
   display: flex;
@@ -237,98 +174,20 @@
 
 .submit-button {
   flex: 1;
-  padding: 1rem;
-  background: #FFF0B8;
+  background: #ffcc00;
   color: #333;
   border: none;
-  border-radius: 15px;
-  font-size: 1rem;
+  border-radius: 12px;
+  padding: 0.8rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
-  min-height: 48px;
-  touch-action: manipulation;
-}
-
-.submit-button:hover {
-  background: #fff38b;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
 }
 
 .cancel-button {
   flex: 1;
-  padding: 1rem;
-  background: rgba(245, 245, 245, 0.9);
-  color: #333;
-  border: 1px solid rgba(232, 232, 232, 0.5);
-  border-radius: 15px;
-  font-size: 1rem;
-  font-weight: 600;
+  background: #f1f1f1;
+  border: none;
+  border-radius: 12px;
+  padding: 0.8rem;
   cursor: pointer;
-  transition: all 0.2s ease;
-  min-height: 48px;
-  touch-action: manipulation;
 }
-
-.cancel-button:hover {
-  background: rgba(235, 235, 235, 0.9);
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@media (min-width: 768px) {
-  .guestbook-page {
-    padding: 2rem 0;
-  }
-
-  .guestbook-page h1 {
-    font-size: 2.5rem;
-    margin-bottom: 2rem;
-  }
-
-  .guestbook-container {
-    flex-direction: row;
-    align-items: flex-start;
-    gap: 3rem;
-  }
-
-  .tree-container {
-    max-width: 500px;
-    flex-shrink: 0;
-  }
-
-  .tree {
-    width: 250px;
-    height: 400px;
-  }
-
-  .tree-top {
-    font-size: 4rem;
-  }
-
-  .tree-middle {
-    font-size: 5rem;
-  }
-
-  .tree-bottom {
-    font-size: 6rem;
-  }
-
-  .guestbook-form-container {
-    flex: 1;
-    max-width: 400px;
-  }
-
-  .guestbook-form {
-    padding: 2rem;
-  }
-}
-
