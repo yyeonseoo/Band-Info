@@ -11,37 +11,38 @@ const Admin = () => {
 
   // 하드코딩된 공연 정보 (자동 설정)
   useEffect(() => {
-    // 이미 공연 정보가 있으면 설정하지 않음 (셋리스트 업로드 시 덮어쓰기 방지)
-    if (performanceData && (performanceData.events || performanceData.ticket)) {
-      return
+    // 하드코딩된 공연 정보 설정 (항상 events와 ticket은 하드코딩된 값으로 덮어쓰기)
+    const defaultEvents = [
+      {
+        title: '1부',
+        description: '멜로딕의 2번째 단독공연이 시작됩니다.',
+        time: '19:00-20:00'
+      },
+      {
+        title: '2부',
+        description: '10분 휴식 시간 후 2부가 시작됩니다.',
+        time: '20:10-21:00'
+      }
+    ]
+
+    const defaultTicket = {
+      eventName: '2025 멜로딕 단독 공연',
+      date: '2025년 12월 27일 (토)',
+      venue: '홍대 라디오 가가 공연장',
+      seat: '자유석'
     }
 
-    // 하드코딩된 공연 정보 설정
-    const defaultPerformanceData: PerformanceData = {
-      events: [
-        {
-          title: '1부',
-          description: '공연 시작 전 특별 이벤트가 진행됩니다.',
-          time: '19:00-20:00'
-        },
-        {
-          title: '2부',
-          description: '10분 휴식 시간 후 2부가 시작됩니다.',
-          time: '20:10-21:00'
-        }
-      ],
-      ticket: {
-        eventName: '2025 멜로딕 단독 공연',
-        date: '2025년 12월 27일 (토)',
-        venue: '홍대 라디오 가가 공연장',
-        seat: '자유석'
-      },
-      // 셋리스트와 공연진은 업로드 시 설정되므로 여기서는 설정하지 않음
+    // 기존 데이터와 병합 (셋리스트와 공연진은 유지, events와 ticket은 하드코딩된 값으로 덮어쓰기)
+    const updatedPerformanceData: PerformanceData = {
+      ...performanceData,
+      events: defaultEvents,
+      ticket: defaultTicket,
+      // 셋리스트와 공연진은 기존 값 유지
       setlist: performanceData?.setlist || [],
       performers: performanceData?.performers || []
     }
 
-    setPerformanceData(defaultPerformanceData)
+    setPerformanceData(updatedPerformanceData)
   }, []) // 마운트 시 한 번만 실행
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
