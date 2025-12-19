@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import TicketTransition from '../components/TicketTransition'
@@ -13,6 +13,57 @@ const Login = () => {
   const { login } = useAuth()
   const navigate = useNavigate()
 
+  useEffect(() => {
+    // 세로 모드에서 스크롤 방지 (입력 필드와 버튼은 제외)
+    const preventScroll = (e: TouchEvent) => {
+      // 세로 모드인지 확인
+      const isPortraitMode = window.innerHeight > window.innerWidth
+      if (!isPortraitMode) {
+        return
+      }
+
+      // 입력 필드, 버튼, 또는 그 부모 요소인 경우 터치 이벤트 허용
+      const target = e.target as HTMLElement
+      if (
+        target.tagName === 'INPUT' ||
+        target.tagName === 'BUTTON' ||
+        target.tagName === 'TEXTAREA' ||
+        target.closest('input') ||
+        target.closest('button') ||
+        target.closest('textarea') ||
+        target.closest('.login-container')
+      ) {
+        return
+      }
+
+      e.preventDefault()
+    }
+
+    // body와 html 스크롤 방지
+    const originalBodyOverflow = document.body.style.overflow
+    const originalBodyPosition = document.body.style.position
+    const originalBodyWidth = document.body.style.width
+    const originalBodyHeight = document.body.style.height
+    const originalHtmlOverflow = document.documentElement.style.overflow
+
+    document.body.style.overflow = 'hidden'
+    document.body.style.position = 'fixed'
+    document.body.style.width = '100%'
+    document.body.style.height = '100%'
+    document.documentElement.style.overflow = 'hidden'
+
+    window.addEventListener('touchmove', preventScroll, { passive: false })
+
+    return () => {
+      document.body.style.overflow = originalBodyOverflow
+      document.body.style.position = originalBodyPosition
+      document.body.style.width = originalBodyWidth
+      document.body.style.height = originalBodyHeight
+      document.documentElement.style.overflow = originalHtmlOverflow
+      window.removeEventListener('touchmove', preventScroll)
+    }
+  }, [])
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
@@ -22,9 +73,21 @@ const Login = () => {
       return
     }
 
+    // 포커스 강제 해제 (iOS 자동 줌 방지)
+    const blurActiveElement = () => {
+      const el = document.activeElement as HTMLElement | null
+      el?.blur?.()
+    }
+
+    blurActiveElement()
+    window.scrollTo(0, 0)
+
     const success = login(name.trim(), phone.trim())
     if (success) {
-      setShowTicket(true)
+      // 키보드가 내려갈 시간을 주고 티켓 표시
+      setTimeout(() => {
+        setShowTicket(true)
+      }, 150)
     } else {
       setError('등록된 정보가 없습니다. 이름과 전화번호를 확인해주세요.')
     }
@@ -40,7 +103,17 @@ const Login = () => {
             date: new Date().toLocaleDateString(),
             seat: 'STANDING',
           }}
-          onDone={() => navigate('/dashboard')}
+          onDone={() => {
+            // 포커스 해제 및 스크롤 초기화
+            const el = document.activeElement as HTMLElement | null
+            el?.blur?.()
+            window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior })
+            
+            // iOS에서 키보드 내려가는 시간을 주고 이동
+            setTimeout(() => {
+              navigate('/dashboard')
+            }, 150)
+          }}
         />
       ) : (
         <div className="login-container">

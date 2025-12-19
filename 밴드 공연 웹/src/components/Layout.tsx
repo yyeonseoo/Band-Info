@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import './Layout.css'
 
@@ -8,10 +8,24 @@ interface LayoutProps {
 
 const Layout = ({ children }: LayoutProps) => {
   const location = useLocation()
-  const { isAuthenticated } = useAuth()
+  const navigate = useNavigate()
+  const { isAuthenticated, logout } = useAuth()
 
   const isActive = (path: string) => {
     return location.pathname === path ? 'active' : ''
+  }
+
+  const handleLogout = () => {
+    logout()
+    navigate('/login')
+  }
+
+  const handleLogoClick = () => {
+    if (isAuthenticated) {
+      navigate('/dashboard')
+    } else {
+      navigate('/login')
+    }
   }
 
   return (
@@ -19,7 +33,9 @@ const Layout = ({ children }: LayoutProps) => {
       <header className="header">
         <div className="container">
           <h1 className="logo">
-            <Link to="/">🎸 밴드 공연 관리</Link>
+            <button onClick={handleLogoClick} className="logo-button">
+              🎸 밴드 공연 관리
+            </button>
           </h1>
           <nav className="nav">
             {isAuthenticated ? (
@@ -43,6 +59,11 @@ const Layout = ({ children }: LayoutProps) => {
             <Link to="/chat" className={`nav-link ${isActive('/chat')}`}>
               채팅
             </Link>
+            {isAuthenticated && (
+              <button onClick={handleLogout} className="nav-link logout-nav-button">
+                로그아웃
+              </button>
+            )}
           </nav>
         </div>
       </header>

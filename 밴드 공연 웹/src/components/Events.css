@@ -3,35 +3,39 @@
   border-radius: 16px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   overflow: hidden;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .events-header {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
-  padding: 1.5rem;
+  padding: 1.25rem;
 }
 
 .events-header h2 {
   margin: 0;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
 }
 
 .events-content {
-  padding: 2rem;
+  padding: 1.25rem;
 }
 
 .events-list {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1rem;
 }
 
 .event-card {
-  padding: 1.5rem;
+  padding: 1.25rem;
   background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
   border-radius: 12px;
   border-left: 4px solid #f39c12;
   transition: transform 0.3s, box-shadow 0.3s;
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .event-card:hover {
@@ -73,6 +77,26 @@
 }
 
 @media (max-width: 768px) {
+  .events-header {
+    padding: 1rem;
+  }
+
+  .events-header h2 {
+    font-size: 1.125rem;
+  }
+
+  .events-content {
+    padding: 1rem;
+  }
+
+  .events-list {
+    gap: 0.75rem;
+  }
+
+  .event-card {
+    padding: 1rem;
+  }
+
   .event-header {
     flex-direction: column;
     gap: 0.5rem;
@@ -83,11 +107,11 @@
   }
 
   .event-title {
-    font-size: 1.1rem;
+    font-size: 1rem;
   }
 
   .event-description {
-    font-size: 0.9rem;
+    font-size: 0.875rem;
   }
 }
 

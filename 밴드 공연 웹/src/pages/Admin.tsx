@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import * as XLSX from 'xlsx'
 import { useData, SetlistItem, PerformanceData } from '../contexts/DataContext'
 import './Admin.css'
@@ -8,6 +8,41 @@ const Admin = () => {
   const [setlistFile, setSetlistFile] = useState<File | null>(null)
   const [uploadStatus, setUploadStatus] = useState('')
   const { uploadGuests, setPerformanceData, guests, performanceData } = useData()
+
+  // 하드코딩된 공연 정보 (자동 설정)
+  useEffect(() => {
+    // 이미 공연 정보가 있으면 설정하지 않음 (셋리스트 업로드 시 덮어쓰기 방지)
+    if (performanceData && (performanceData.events || performanceData.ticket)) {
+      return
+    }
+
+    // 하드코딩된 공연 정보 설정
+    const defaultPerformanceData: PerformanceData = {
+      events: [
+        {
+          title: '1부',
+          description: '공연 시작 전 특별 이벤트가 진행됩니다.',
+          time: '19:00-20:00'
+        },
+        {
+          title: '2부',
+          description: '10분 휴식 시간 후 2부가 시작됩니다.',
+          time: '20:10-21:00'
+        }
+      ],
+      ticket: {
+        eventName: '2025 멜로딕 단독 공연',
+        date: '2025년 12월 27일 (토)',
+        venue: '홍대 라디오 가가 공연장',
+        seat: '자유석'
+      },
+      // 셋리스트와 공연진은 업로드 시 설정되므로 여기서는 설정하지 않음
+      setlist: performanceData?.setlist || [],
+      performers: performanceData?.performers || []
+    }
+
+    setPerformanceData(defaultPerformanceData)
+  }, []) // 마운트 시 한 번만 실행
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -90,60 +125,6 @@ const Admin = () => {
     setUploadStatus('✅ 샘플 엑셀 파일이 다운로드되었습니다.')
   }
 
-  const handleAddSamplePerformanceData = () => {
-    const sampleSetlist = [
-      { songName: 'Opening', artist: '밴드명', vocal: '홍길동', guitar: '김철수', bass: '이영희', keyboard: '박민수', drum: '최지영' },
-      { songName: '첫 번째 곡', artist: '밴드명', vocal: '홍길동', guitar: '김철수', bass: '이영희', keyboard: '박민수', drum: '최지영' },
-      { songName: '두 번째 곡', artist: '밴드명', vocal: '홍길동', guitar: '김철수', bass: '이영희', keyboard: '박민수', drum: '최지영' },
-      { songName: '세 번째 곡', artist: '밴드명', vocal: '홍길동', guitar: '김철수', bass: '이영희', keyboard: '박민수', drum: '최지영' },
-      { songName: '네 번째 곡', artist: '밴드명', vocal: '홍길동', guitar: '김철수', bass: '이영희', keyboard: '박민수', drum: '최지영' },
-      { songName: 'Encore', artist: '밴드명', vocal: '홍길동', guitar: '김철수', bass: '이영희', keyboard: '박민수', drum: '최지영' },
-      { songName: '마지막 곡', artist: '밴드명', vocal: '홍길동', guitar: '김철수', bass: '이영희', keyboard: '박민수', drum: '최지영' }
-    ]
-
-    // 셋리스트에서 모든 공연진 정보 수집 (중복 제거)
-    const allPerformers = new Set<string>()
-    
-    sampleSetlist.forEach((item) => {
-      const extractMembers = (members: string | undefined) => {
-        if (!members) return []
-        return members.split(',').map(m => m.trim()).filter(m => m && m !== '-')
-      }
-      
-      extractMembers(item.vocal).forEach(name => allPerformers.add(name))
-      extractMembers(item.guitar).forEach(name => allPerformers.add(name))
-      extractMembers(item.bass).forEach(name => allPerformers.add(name))
-      extractMembers(item.keyboard).forEach(name => allPerformers.add(name))
-      extractMembers(item.drum).forEach(name => allPerformers.add(name))
-    })
-    
-    const uniquePerformers = Array.from(allPerformers).sort()
-
-    const samplePerformanceData = {
-      setlist: sampleSetlist,
-      performers: uniquePerformers,
-      events: [
-        {
-          title: '공연 시작 이벤트',
-          description: '공연 시작 전 특별 이벤트가 진행됩니다.',
-          time: '19:00'
-        },
-        {
-          title: '인터미션',
-          description: '15분 휴식 시간입니다.',
-          time: '20:30'
-        }
-      ],
-      ticket: {
-        eventName: '2025 멜로딕 단독 공연',
-        date: '2025년 12월 27일 (토)',
-        venue: '홍대 라디오 가가 공연장',
-        seat: '자유석'
-      }
-    }
-    setPerformanceData(samplePerformanceData)
-    setUploadStatus('✅ 샘플 공연 정보가 추가되었습니다.')
-  }
 
   const handleSetlistUpload = async () => {
     if (!setlistFile) {
@@ -306,32 +287,6 @@ const Admin = () => {
     setUploadStatus('✅ 샘플 셋리스트 엑셀 파일이 다운로드되었습니다.')
   }
 
-  const handlePerformanceDataInput = () => {
-    const eventTitle = prompt('이벤트 제목:')
-    const eventDesc = prompt('이벤트 설명:')
-    const eventName = prompt('공연명:')
-    const date = prompt('공연 날짜:')
-    const venue = prompt('공연장:')
-
-    if (eventTitle || eventName) {
-      // 공연진은 셋리스트에서 자동으로 추출되므로 기존 값 유지
-      const updatedPerformanceData = {
-        ...performanceData,
-        performers: performanceData?.performers || [],
-        events: eventTitle ? [{
-          title: eventTitle,
-          description: eventDesc || '',
-        }] : performanceData?.events || [],
-        ticket: eventName ? {
-          eventName,
-          date: date || '',
-          venue: venue || '',
-        } : performanceData?.ticket,
-      }
-      setPerformanceData(updatedPerformanceData)
-      alert('공연 정보가 저장되었습니다. (공연진은 셋리스트에서 자동으로 반영됩니다)')
-    }
-  }
 
   return (
     <div className="admin-page">
@@ -419,18 +374,34 @@ const Admin = () => {
       </div>
 
       <div className="admin-section">
-        <h2>공연 정보 설정</h2>
+        <h2>공연 정보</h2>
         <p className="section-description">
-          공연 정보를 입력하세요 (이벤트, 티켓 정보). 공연진은 셋리스트 업로드 시 자동으로 반영됩니다.
+          공연 정보는 자동으로 설정됩니다. 공연진은 셋리스트 업로드 시 자동으로 반영됩니다.
         </p>
-        <div className="config-buttons">
-          <button onClick={handleAddSamplePerformanceData} className="config-button sample">
-            🎵 샘플 공연 정보 추가
-          </button>
-          <button onClick={handlePerformanceDataInput} className="config-button">
-            ✏️ 공연 정보 직접 입력
-          </button>
-        </div>
+        {performanceData && (performanceData.events || performanceData.ticket) && (
+          <div className="performance-info-display">
+            {performanceData.ticket && (
+              <div className="info-item">
+                <strong>공연명:</strong> {performanceData.ticket.eventName}
+              </div>
+            )}
+            {performanceData.ticket && (
+              <div className="info-item">
+                <strong>날짜:</strong> {performanceData.ticket.date}
+              </div>
+            )}
+            {performanceData.ticket && (
+              <div className="info-item">
+                <strong>공연장:</strong> {performanceData.ticket.venue}
+              </div>
+            )}
+            {performanceData.events && performanceData.events.length > 0 && (
+              <div className="info-item">
+                <strong>이벤트:</strong> {performanceData.events.length}개
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   )

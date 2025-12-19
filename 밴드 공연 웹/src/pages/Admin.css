@@ -143,6 +143,30 @@
   color: #004499;
 }
 
+.performance-info-display {
+  background-color: #f9f9f9;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  margin-top: 1rem;
+}
+
+.performance-info-display .info-item {
+  margin-bottom: 0.75rem;
+  font-size: 0.95rem;
+  color: #333;
+  line-height: 1.6;
+}
+
+.performance-info-display .info-item:last-child {
+  margin-bottom: 0;
+}
+
+.performance-info-display .info-item strong {
+  color: #667eea;
+  margin-right: 0.5rem;
+}
+
 @media (max-width: 768px) {
   .admin-page h1 {
     font-size: 2rem;

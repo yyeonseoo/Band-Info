@@ -6,7 +6,7 @@ import Events from '../components/Events'
 import './Dashboard.css'
 
 const Dashboard = () => {
-  const { user, logout } = useAuth()
+  const { user } = useAuth()
   const { performanceData } = useData()
 
   return (
@@ -16,9 +16,6 @@ const Dashboard = () => {
           <h1>안녕하세요, {user?.name}님! 👋</h1>
           <p>내 티켓과 이벤트 정보를 확인하세요</p>
         </div>
-        <button onClick={logout} className="logout-button">
-          로그아웃
-        </button>
       </div>
 
       <div className="dashboard-content">
