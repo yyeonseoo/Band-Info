@@ -14,7 +14,7 @@ const Events = ({ events }: EventsProps) => {
   return (
     <div className="events">
       <div className="events-header">
-        <h2>🎉 이벤트</h2>
+        <h2>타임라인</h2>
       </div>
       <div className="events-content">
         <div className="events-list">

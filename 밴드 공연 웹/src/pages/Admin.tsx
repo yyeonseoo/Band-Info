@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import * as XLSX from 'xlsx'
+import { QRCodeSVG } from 'qrcode.react'
 import { useData, SetlistItem, PerformanceData } from '../contexts/DataContext'
 import './Admin.css'
 
@@ -7,7 +8,7 @@ const Admin = () => {
   const [file, setFile] = useState<File | null>(null)
   const [setlistFile, setSetlistFile] = useState<File | null>(null)
   const [uploadStatus, setUploadStatus] = useState('')
-  const { uploadGuests, setPerformanceData, guests, performanceData } = useData()
+  const { uploadGuests, setPerformanceData, guests, performanceData, checkInCode, generateCheckInCode, setCheckInCode } = useData()
 
   // 하드코딩된 공연 정보 (자동 설정)
   useEffect(() => {
@@ -403,6 +404,84 @@ const Admin = () => {
             )}
           </div>
         )}
+      </div>
+
+      <div className="admin-section">
+        <h2>현장 체크인 QR 코드</h2>
+        <p className="section-description">
+          아래 QR 코드를 현장에 출력하여 붙여놓으세요. 참가자들이 이 QR 코드를 스캔하여 체크인할 수 있습니다.
+        </p>
+        <div className="qr-code-section">
+          <div className="qr-code-container">
+            <QRCodeSVG 
+              value={`${window.location.origin}/checkin`}
+              size={300}
+              level="H"
+            />
+          </div>
+          <p className="qr-code-instruction">
+            이 QR 코드를 현장에 출력하여 붙여놓으세요.
+          </p>
+          <button 
+            onClick={() => {
+              const qrElement = document.querySelector('.qr-code-container svg')
+              if (qrElement) {
+                const svgData = new XMLSerializer().serializeToString(qrElement as Node)
+                const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' })
+                const url = URL.createObjectURL(svgBlob)
+                const link = document.createElement('a')
+                link.download = '체크인_QR코드.svg'
+                link.href = url
+                link.click()
+                URL.revokeObjectURL(url)
+              }
+            }}
+            className="download-qr-button"
+          >
+            📥 QR 코드 이미지 다운로드
+          </button>
+        </div>
+      </div>
+
+      <div className="admin-section">
+        <h2>체크인 코드 (4자리)</h2>
+        <p className="section-description">
+          현장에서 참가자들이 입력할 4자리 체크인 코드를 생성하세요. 이 코드를 현장에 안내하세요.
+        </p>
+        <div className="checkin-code-section">
+          {checkInCode ? (
+            <div className="checkin-code-display">
+              <div className="checkin-code-box">
+                <span className="checkin-code-label">현재 체크인 코드</span>
+                <div className="checkin-code-value">{checkInCode}</div>
+              </div>
+              <button 
+                onClick={() => {
+                  const newCode = generateCheckInCode()
+                  setCheckInCode(newCode)
+                  setUploadStatus(`✅ 새로운 체크인 코드가 생성되었습니다: ${newCode}`)
+                }}
+                className="regenerate-code-button"
+              >
+                🔄 새 코드 생성
+              </button>
+            </div>
+          ) : (
+            <div className="checkin-code-generate">
+              <p>아직 체크인 코드가 생성되지 않았습니다.</p>
+              <button 
+                onClick={() => {
+                  const newCode = generateCheckInCode()
+                  setCheckInCode(newCode)
+                  setUploadStatus(`✅ 체크인 코드가 생성되었습니다: ${newCode}`)
+                }}
+                className="generate-code-button"
+              >
+                ✨ 체크인 코드 생성
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   )

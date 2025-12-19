@@ -10,6 +10,7 @@ import Performances from './pages/Performances'
 import Events from './pages/Events'
 import Chat from './pages/Chat'
 import Guestbook from './pages/Guestbook'
+import CheckIn from './pages/CheckIn'
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
       <DataProvider>
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/checkin" element={<CheckIn />} />
           <Route path="/manage" element={<Admin />} />
           <Route path="/" element={<Navigate to="/login" replace />} />
           <Route

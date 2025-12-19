@@ -3,12 +3,16 @@ import { createContext, useContext, useState, useEffect, ReactNode } from 'react
 interface User {
   name: string
   phone: string
+  entryNumber?: number // 입장 번호
+  checkedIn?: boolean // 체크인 여부
+  checkedInAt?: number // 체크인 시간 (timestamp)
 }
 
 interface AuthContextType {
   user: User | null
   login: (name: string, phone: string) => boolean
   logout: () => void
+  updateUser: (userData: User) => void
   isAuthenticated: boolean
 }
 
@@ -50,7 +54,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (foundGuest) {
       const guestName = foundGuest.name || foundGuest['이름'] || name
       const guestPhone = foundGuest.phone || foundGuest['전화번호'] || phone
-      const userData = { name: guestName, phone: guestPhone }
+      const userData = { 
+        name: guestName, 
+        phone: guestPhone,
+        entryNumber: foundGuest.entryNumber,
+        checkedIn: foundGuest.checkedIn || false,
+        checkedInAt: foundGuest.checkedInAt
+      }
       setUser(userData)
       localStorage.setItem('user', JSON.stringify(userData))
       return true
@@ -64,8 +74,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     localStorage.removeItem('user')
   }
 
+  const updateUser = (userData: User) => {
+    setUser(userData)
+    localStorage.setItem('user', JSON.stringify(userData))
+  }
+
   return (
-    <AuthContext.Provider value={{ user, login, logout, isAuthenticated: !!user }}>
+    <AuthContext.Provider value={{ user, login, logout, updateUser, isAuthenticated: !!user }}>
       {children}
     </AuthContext.Provider>
   )

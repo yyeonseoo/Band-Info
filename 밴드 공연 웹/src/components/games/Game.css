@@ -369,6 +369,92 @@
   transform: rotateY(0deg);
 }
 
+/* 룰렛 */
+.roulette-container {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  margin: 2rem auto;
+}
+
+.roulette-wheel {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 8px solid #333;
+  position: relative;
+  overflow: hidden;
+  background: conic-gradient(
+    from 0deg,
+    #ff6b6b 0deg 45deg,
+    #4ecdc4 45deg 90deg,
+    #45b7d1 90deg 135deg,
+    #96ceb4 135deg 180deg,
+    #ffeaa7 180deg 225deg,
+    #fdcb6e 225deg 270deg,
+    #e17055 270deg 315deg,
+    #a29bfe 315deg 360deg
+  );
+  transition: transform 3s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.roulette-wheel.spinning {
+  transition: transform 3s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+}
+
+.roulette-item {
+  position: absolute;
+  width: 50%;
+  height: 50%;
+  left: 50%;
+  top: 0;
+  transform-origin: left bottom;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 10px;
+}
+
+.roulette-item-content {
+  transform: rotate(calc(var(--item-angle) / 2));
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: white;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+  white-space: nowrap;
+  text-align: center;
+}
+
+.roulette-pointer {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-top: 30px solid #333;
+  z-index: 10;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.roulette-result {
+  text-align: center;
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 12px;
+  color: white;
+  animation: fadeInUp 0.5s ease-out;
+}
+
+.roulette-result .result-text {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
 @media (max-width: 768px) {
   .game-container {
     padding: 1.5rem;
@@ -385,6 +471,15 @@
 
   .memory-grid {
     grid-template-columns: repeat(3, 1fr);
+  }
+
+  .roulette-container {
+    width: 250px;
+    height: 250px;
+  }
+
+  .roulette-item-content {
+    font-size: 0.75rem;
   }
 }
 
